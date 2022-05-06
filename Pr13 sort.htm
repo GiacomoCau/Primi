@@ -1,0 +1,39 @@
+<body>
+<script src="Util.js"></script>
+<script>
+
+var fs ={};
+fs[2]=3;
+fs[15]=6;
+fs[4]=4;
+
+writeObj(fs);
+
+writeObj(objSort(fs))
+writeObj(objSort(fs,function (a,b){return a-b}))
+writeObj(objSort(fs,function (a,b){return b-a}))
+
+function writeObj(o) {
+   var n=0;
+   document.write("{");
+   for (var i in o) 
+      document.write((n++ ? ", ":""), i, ":",fs[i]);
+   document.write("}<br><br>");
+}
+
+function wrniteArr(v) {
+   document.write("[",v,"]","<br>");
+}
+
+function objSort(o, f) {
+   var p, v = [], r={};
+   for ( p in o ) v[v.length]=p;
+   v.sort(f ? f : null);
+   for (var i in v) {
+      p = v[i];
+      r[p] = o[p];
+   }
+   return r;
+}
+</script>
+</body>

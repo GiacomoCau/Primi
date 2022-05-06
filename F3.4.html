@@ -1,0 +1,115 @@
+<body>
+<form>
+Scomposizione in fattori primi per
+<br>
+i numeri 
+da <input type=text name=f size=5>
+ a <input type=text name=t size=5>
+<br><br>
+<input type=checkbox name=s>
+Stampa risultato 
+<br><br>
+<input type=submit value=esegui>
+<br><br>
+</form>
+<script src="Util.js"></script>
+<script>
+
+/* l'ordine dei fattori si articola fra 2 estremi
+1) il minimo: in questo caso posso
+limitare il ciclo alla sqrt(n) ma non devo
+sovrascrivere i fattori già assegnati con
+un setMultiple che testa prima di
+assegnare
+2) il massimo: in questo caso la 
+setMultiple può essere ignorante ma il 
+ciclo deve protratto sino ad n.
+3) in mezzo limitare alla sqrt(n) con una
+setMultiple ignorante obbliga 
+l'ordinamento in fase di stampa*/
+
+checkFormFromToAndExecute( main1 );
+
+function main1( f, t, s ) {
+   var tm = new Timer;
+   var cs = new Array( t + 1 );
+   for( var n=2; n<=t; ) {
+      setMultiples( n, t, cs );
+      while( cs[++n] );
+   }
+   tm.parzial('Primi');
+   for( var n=f; n<=t; n++ ) {
+      if ( cs[n] ) factors(n, cs);
+   }
+   tm.parzial('Fattori');
+   tm.total('Totale');
+   if (s) writeTable( f, t, cs );
+   function setMultiples( n, t, cs ) {
+      t -= n;
+      for( var i=n; i<=t; )
+			cs[i+=n] = n;
+   }
+   function factors(n, cs) {  
+      var p = cs[n];
+      if (p.constructor == Object) return p;
+      var fs = cs[n] = {};
+      if ( cs[n/=p] ) 
+         cpyFactors(fs, factors(n, cs));
+      else
+         fs[n] = 1;
+      incExp(p, fs); 
+      return fs;
+      function cpyFactors( t, f ) {
+         for ( var e in f ) t[e] = f[e]
+      }
+		function incExp(n, f) {
+		   if ( f[n] ) f[n]++; else f[n]=1;
+		}
+   }
+}
+
+function main2( f, t, s) {
+   var tm = new Timer;
+   var cs = new Array( t + 1 );
+   for( var n=2, e=sqrt(t); n<=e; ) {
+      setMultiples( n, t, cs );
+      while( cs[++n] );
+   }
+   tm.parzial('Primi');
+   for( var n=f; n<=t; n++ ) {
+      if ( cs[n] ) factors(n, cs);
+   }
+   tm.parzial('Fattori');
+   tm.total('Totale');
+   if (s) writeTable( f, t, cs );
+   function setMultiples(n, t, cs) {
+      t -= n;
+      for( var i=n; i<=t; ) {
+         if ( cs[i+=n] ) continue;
+         cs[i] = n;
+      }
+   }
+   function factors(n, cs) {  
+      var p = cs[n];
+      if (p.constructor == Object) return p;
+      var fs = cs[n] = {};
+      fs[p] = 1;      
+      if ( cs[n/=p] ) 
+         cpyFactors(fs, factors(n, cs));
+      else
+         incExp( n, fs );
+      return fs;
+      function cpyFactors( t, f ) {
+         for ( var e in f ) t[e] = f[e];
+         if (f[p]) t[p]++;
+      }
+		function incExp(n, f) {
+		   if ( f[n] ) f[n]++; else f[n]=1;
+		}
+   }
+}
+
+
+  
+</script>
+</body>

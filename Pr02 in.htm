@@ -1,0 +1,27 @@
+<body>
+<script src="Util.js"></script>
+<script>
+//var a;
+//var a=new Array(2,3,5,7,11,13);
+var a=new Array(5);
+a[4]=2;
+a[2]=3;
+a[3]=9;
+
+document.write("1 - 0 in a:",typeof(a[0]), "<br>");
+document.write("2 - 0 in a:",(a[0]?"si":"no"), "<br>");
+document.write(a, "<br>");
+//a.sort();
+for ( e in a ) document.write(e,":",a[e], "<br>");
+
+
+var o = new Object;
+document.write("3 - 0 in o:",typeof(o[0]), "<br>");
+document.write("4 - 0 in o:",typeof(o[0]), "<br>");
+
+// in non funziona!
+//document.write("5 - 0 in a:", 0 in a, "<br>");
+//document.write("6 - 0 in o:", 0 in o, "<br>");
+
+</script>
+</body>

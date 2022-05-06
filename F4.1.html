@@ -1,0 +1,163 @@
+<body>
+<form>
+
+Scomposizione in fattori primi per
+<br>
+i numeri 
+da <input type=text name=f size=5>
+ a <input type=text name=t size=5>
+<br><br>
+<input type=checkbox name=s>
+Stampa risultato 
+<br><br>
+<input type=submit value=esegui>
+<br><br>
+</form>
+<script src="Util.js"></script>
+<script>
+
+checkFormFromToAndExecute( main5 );
+
+function main1(f, t, s) {
+   var tm = new Timer;
+   var ps = {};
+   var cs = new Array( t + 1 );
+   for( var n=2; n<=t; n++ ) {
+      if ( cs[n] ) {
+         if ( n>=f ) factors(n, ps, cs);
+      }
+      else {
+         ps[n]=true;
+         setMultiples(n, t, cs);
+      }
+   }
+   tm.total();
+   if (s) writeTable( f, t, cs );
+}
+
+function main2(f, t, s) {
+   var tm = new Timer;
+   var ps = {};
+   var cs = new Array( t + 1 );
+   for( var n=2; n<f; n++ ) {
+      if ( !cs[n] ) {
+         ps[n]=true;
+         setMultiples(n, t, cs);
+      }
+   }
+   for( var n=f ; n<=t; n++ ) {
+      if ( cs[n] )
+         factors(n, ps, cs);
+      else {
+         ps[n]=true;
+         setMultiples(n, t, cs);
+      }
+   }
+   tm.total();
+   if (s) writeTable( f, t, cs );
+}
+
+function main3(f, t, s) {
+   var tm = new Timer;
+   var ps = {};
+   var cs = new Array( t + 1 );
+   ps[2]=true;
+   setMultiples(2, t, cs);
+   for( var n=3; n<f; n+=2 ) {
+      if ( !cs[n] ) {
+         ps[n]=true;
+         setMultiples(n, t, cs);
+      }
+   }
+   for( var n=f ; n<=t; n++ ) {
+      if ( cs[n] )
+         factors(n, ps, cs);
+      else {
+         ps[n]=true;
+         setMultiples(n, t, cs);
+      }
+   }
+   tm.total();
+   if (s) writeTable( f, t, cs );
+}
+
+function main4(f, t, s) {
+   var tm = new Timer;
+   var ps = {};
+   var cs = new Array( t + 1 );
+   ps[2] = true;
+   setMultiples(2, t, cs);
+   for(var n=3, e=sqrt(t) ; n<=t; n+=2 ) {
+      if ( !cs[n] ) {
+         ps[n]=true;
+         if (n<=e) setMultiples(n, t, cs);
+      }
+   }
+   for( var n=f ; n<=t; n++ ) {
+      if ( cs[n] )
+         factors(n, ps, cs);
+   }
+   tm.total();
+   if (s) writeTable( f, t, cs );
+}
+
+function main5(f, t, s) {
+   var tm = new Timer;
+   var ps = {};
+   var cs = new Array( t + 1 );
+   ps[2] = true;
+   setMultiples(2, t, cs);
+   for(var n=3, e=Math.floor(Math.sqrt(t)); n<=e; n+=2 ) {
+      if ( !cs[n] ) {
+         ps[n]=true;
+         setMultiples(n, t, cs);
+      }
+   }
+   for( ; n<=t; n+=2 ) {
+      if ( !cs[n] )  ps[n]=true;
+   }
+   tm.parzial('Primi');
+   for( var n=f ; n<=t; n++ ) {
+      if ( cs[n] ) 
+         factors(n, ps, cs);
+   }
+   tm.parzial('Fattori');
+   tm.total('Totale');
+   if (s) writeTable(f, t, cs);
+}
+
+
+function factors(n, ps, cs) {
+   // Fattori crescenti.
+   var fs = cs[n] = {};
+   for (var p in ps ) {
+      if ( n % p ) continue;
+      break;
+   }
+   fs[p] = 1;
+   if ( ps[n /= p] )
+      incExp(fs, n); 
+   else {
+      if( cs[n] === true ) factors(n, ps, cs);
+      cpyFactors(fs, cs[n], p);
+   }
+}
+
+function factorsDecr(n, ps, cs) {
+   // Fattori decrescenti.
+   var fs = cs[n] = {};
+   for (var p in ps ) {
+      if ( n % p ) continue;
+      break;
+   }
+   if ( ps[n /= p] )
+      fs[n] = 1;
+   else {
+      if( cs[n] === true ) factorsDecr(n, ps, cs);
+      cpyObj(fs, cs[n]);
+   }
+   incExp(fs, p); 
+}
+
+</script>
+</body>

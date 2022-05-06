@@ -1,0 +1,85 @@
+<body>
+<script>
+
+var q=32;
+var bb=-1;
+
+function bitArray(n) {
+   ba = new Array(Math.ceil(n/q));
+   for( var i=0; i<ba.length; i++ ) ba[i]=0;
+}
+
+function put(n,b) {
+   if (b)
+      set(n);
+   else
+      unset(n);
+}
+
+function set(n) {
+  document.write("set ",n,"<br>");
+   var r = n%q;
+   ba[getidx(n,r)]|=1<<r;
+}
+
+function unset(n) {
+   document.write("unset ",n,"<br>");
+   var r = n%q;
+   ba[getidx(n,r)]&=~(1<<r)
+}
+
+function get(n) {
+  var r = n%q;
+  r = ba[getidx(n,r)]&(1<<r)
+  document.write("get ",n," ",r ? "si":"no","<br>");
+  return r
+}
+
+function getidx(n, r) {
+   var f = n - r;
+   if (f!=bb) {
+      bb = f;
+      bi = Math.floor(n/q);
+   }
+   return bi;
+}
+
+
+function print() {
+   for( var i=0; i<ba.length; i++ )
+      document.write(i,":",ba[i].toString(2),"<br>");
+   //document.write("<br>");
+}
+
+bitArray(63);
+print();
+
+set(0);
+set(1);
+print();
+get(1);
+set(30);
+set(31);
+print();
+get(31);
+get(10);
+set(10);
+print();
+get(10);
+set(32);print();
+set(35);print();
+set(30);print();
+set(9);print();
+set(10);print();
+set(11);print();
+set(10);print();
+get(10);
+set(0);print();
+set(31);print();
+set(32);print();
+unset(31);print();
+get(34);
+get(33);
+
+</script>
+</body>

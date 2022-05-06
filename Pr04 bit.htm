@@ -1,0 +1,20 @@
+<body>
+<script>
+max=Math.pow(2,31)-1;
+min=-Math.pow(2,31)+1;
+document.write("max: ",max.toString(16),"<br>");
+document.write("min: ",min.toString(16),"<br>");
+
+var x = (1<<31)+1;
+document.write(x.toString(16),"<br>");
+document.write((~0).toString(16),"<br>");
+x&=0;
+document.write(x.toString(16),"<br>");
+
+s=Math.floor(Math.sqrt(82));
+document.write(9===s,"<br>");
+document.write((9).toString(2),"<br>");
+document.write(s.toString(2),"<br>");
+
+</script>
+</body>

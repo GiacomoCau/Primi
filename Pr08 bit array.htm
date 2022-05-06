@@ -1,0 +1,30 @@
+<body>
+<script src="Util.js"></script>
+<script>
+var n=3210;
+
+document.write(n%32,"<br>");
+document.write(Math.floor(n/32),"<br>");
+document.write((0x0000001f).toString(2),"<br>");
+document.write((31).toString(2),"<br>");
+document.write((0xffffffff).toString(2),"<br>");
+document.write((0x7fffffff).toString(),"<br>");
+document.write((Number.MAX_VALUE).toString(16),"<br>");
+document.write((3).toString(2),"<br>");
+document.write(toS(3<<30),"<br>");
+document.write(toS(1<<30),"<br>");
+document.write(n&0x0000001f,"<br>");
+document.write(n&31,"<br>");
+document.write(n>>5,"<br>");
+document.write(Number);
+
+function toS(n) {
+    var s = (n&0x7fffffff).toString(2)
+    s = ("0000000000000000000000000000000"+s).substr(s.length,31);
+    return (n<0?1:0)+s
+}
+
+
+</script>
+
+</body>

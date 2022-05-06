@@ -1,0 +1,80 @@
+<body>
+<script>
+
+function BitArray(n) {
+
+   var a = new Array(Math.ceil(n/32));
+   for ( var i=0; i<a.length; i++ ) a[i]=0;
+ 
+   this.put = function (n,b) {
+      if (b)
+         set(n);
+      else
+         unset(n);
+   }
+
+   this.set = function (n) {
+      document.write("set ",n,"<br>");
+      a[n>>5]|=1<<(n&31);
+   }
+
+   this.unset = function (n) {
+      document.write("unset ",n,"<br>");
+      a[n>>5]&=~(1<<(n&31))
+   }
+
+   this.get = function (n) {
+     var r = a[n>>5]&(1<<( n&31))
+     document.write("get ",n," ",r ? "si":"no","<br>");
+     return r
+   }
+
+   this.toString = function () {
+      var s="";
+      for(var i=0; i<a.length; i++ )
+         s = toSE(a[i]) + s;
+      return s.substr(s.length-n-1);
+      function toSE(n) {
+         var s = (n&0x7fffffff).toString(2);
+         s = ("0000000000000000000000000000000"+s).substr(s.length);
+         return (n<0?1:0)+s;
+      }
+   }
+
+   this.print = function () {
+       document.write(this,"<br>");
+   }
+}
+
+var a = new BitArray(33);
+a.print();
+a.set(0);
+a.set(1);
+a.print();
+a.get(1);
+a.set(30);
+a.set(31);
+a.print();
+a.get(30);
+a.get(31);
+a.get(10);
+a.set(10);
+a.print();
+a.get(10);
+a.set(32);
+a.get(32);
+a.set(33);
+a.get(33);
+a.print();
+a.set(0);
+a.get(0);
+a.unset(31);
+a.get(31);
+a.set(64);
+a.print();
+
+
+//for (var p in a)
+  //document.write(p, ":", a[p],"<br>");
+</script>
+</body>

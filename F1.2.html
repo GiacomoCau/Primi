@@ -1,0 +1,124 @@
+<body>
+<form>
+
+Identificazione dei numeri composti
+<br>
+da 2 sino a
+<input type=text name=t size=5>
+<br>
+<input type=checkbox name=s>
+Stampa risultato 
+<br><br>
+<input type=submit value=esegui>
+<br><br>
+
+</form>
+<script src="Util.js"></script>
+<script>
+
+checkFormToAndExecute( main2 );
+
+function main1(t, s) {   
+   var tm = new Timer()
+   var cs = composites6( t )
+   tm.total()
+   writeStat( 2, t, cs )
+   if (s) writeTable( 2, t, cs )
+}
+
+function main2(t, s) {   
+   test(1000, //times
+     [composites1, 
+      composites2, 
+      composites3,
+      composites4,
+      composites5,
+      composites6],
+      t
+   )
+}
+
+
+
+function composites1 (t) {
+   // rispetto all'originale vengono
+   // valorizzati con true i composti 
+   // lasciando non valorizzati i primi
+   // si risparmia l'inizializzazione e rimane
+   // solo un elemento per numero
+   // composto
+   var cs = new Array( t+1 );
+   for( var n=2, e=sqrt(t); n<=e; n++ ) {
+      if ( !cs[n] ) {
+         setMultiples( n, t, cs, true )
+      }
+   }
+   return cs;
+}
+
+function composites2 (t) {
+   // si evita la valutazione di !
+   var cs = new Array( t+1 );
+   for( var n=2, e=sqrt(t); n<=e; n++ ) {
+      if ( cs[n] ) continue;
+      setMultiples( n, t, cs, true )
+   }
+   return cs;
+}
+
+function composites3 (t) {
+   // in teoria dovrebbe essere meglio
+   // una sola sqrt contro una * per ciclo 
+   // soprattutto se i cicli sono molti.
+   var cs = new Array( t+1 );
+   for(var n=2; n*n<=t; n++) {
+      if ( cs[n] ) continue;
+      setMultiples( n, t, cs, true )
+   }
+   return cs;
+}
+
+function composites4 (t) {
+   // dovrebbe dare il meglio quando
+   // i primi si fanno più rari.
+   // per la compattezza può essere
+   // l'implementazione di riferimento
+   var cs = new Array( t+1 );
+   for( var n=2, e=sqrt(t); n<=e; ) {
+      setMultiples( n, t, cs, true )
+      while( cs[++n] );
+   }
+   return cs;
+}
+
+// le soluzioni successive non presentano
+// miglioramenti 
+
+function composites5 (t) {
+   // lieve miglioramento dovuto al
+   // mancato test dei numeri pari
+   var cs = new Array( t+1 )
+   setMultiples( 2, t, cs )
+   for( var n=3, e=sqrt(t); n<=e; ) {
+      setMultiples( n, t, cs, true )
+      while( cs[n+=2] );
+   }
+   return cs;
+}
+
+function composites6 (t) {
+   // lieve miglioramento dovuto al
+   // mancato test dei numeri divisibili
+   // per due e tre
+   var cs = new Array( t+1 )
+   setMultiples( 2, t, cs )
+   setMultiples( 3, t, cs )
+   for( var n=5, i=4, e=sqrt(t); n<=e; ) {
+      setMultiples( n, t, cs, true )
+      while( cs[i=6-i, n+=i] );
+   }
+   return cs
+}
+
+</script>
+</body>

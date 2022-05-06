@@ -1,0 +1,73 @@
+<body>
+<form>
+
+Prova 6 <br>
+
+<script src="Util.js"></script>
+
+<script>
+var is
+var t = new Timer()
+
+print(3, mkIs(1,2,3))
+t.parzial('1')
+
+print(8, mkIs(6,4,2,4,2,6,6,2))
+t.parzial('2')
+
+is = mkIs(6,4,2,4,2,6,6,2);
+for (var i=200000; i--;) {
+	is.i+1
+	is=is.n
+}
+t.parzial('3')
+
+is = [6,4,2,4,2,6,6,2]
+for (var n=0,i=200000; i--;) {
+	is[n]+1
+	if (n==7) n=0 ; else n++
+}
+document.write('<br>')
+t.parzial('4')
+
+is = [6,4,2,4,2,6,6,2]
+for (var n=0,i=200000; i--;) {
+	is[n]+1
+	if (n==7) n=-1; n++
+}
+document.write('<br>')
+t.parzial('5')
+
+is = [6,4,2,4,2,6,6,2]
+for (var n=0,i=200000; i--;) {
+	is[n]+1
+	n = n==7 ? 0 : n+1
+}
+document.write('<br>')
+t.parzial('6')
+
+function mkIs(vs) {
+   var is = {};
+   var ls = is;
+   for(var i = arguments.length;;) {
+      is.i = arguments[--i];
+      if (!i) break;
+      is = {n:is};
+   }
+   ls.n = is;
+   return is
+}
+
+function print( n, l ) {
+   for (; n--; l = l.n )
+      document.write( l.i, n ? ',' : '' );
+   document.write('<br>'); 
+}
+
+
+
+</script>
+
+
+</form>
+</body>

@@ -1,0 +1,67 @@
+<body>
+<form>
+
+Prova 7<br>
+
+<script>
+
+function wrtObj () {
+   var r = "";
+   for(k in this)
+      r += k +": "+this[k] +"<br>";
+   return r + "ok<br><br>";
+}
+
+//Array.prototype.toString=wrtObj;
+//Object.prototype.toString=wrtObj;
+
+var a="xcdf";
+
+var o = new Array(5);
+o[1]=true;
+o[2]=true;
+document.write("o:", "<br>", o,"<br>");
+document.write("oto:",typeof(o),"<br>");
+document.write("oto:",typeof(Array),"<br>");
+document.write("oto:",typeof(Array.prototype),"<br>");
+document.write("oto:",Array.prototype,"<br>");
+document.write("o t:",o.constructor==Array,"<br>");
+document.write("o c:",o.constructor,"<br>");
+document.write("o p:",typeof(o.prototype),"<br>");
+document.write("o p:",o.prototype,"<br>");
+//delete o[1];
+
+for(k in o)
+    document.write(k +" : ",o[k],"<br>")
+document.write("ok<br><br>");
+
+for(k in Array.prototype)
+    document.write(k +" : ",Array.prototype[k],"<br>")
+document.write("ok<br><br>");
+
+
+function Obj() {
+    var x=1;
+    //document.write("...","<br>");
+    this.n = 9876;
+    this.write = function () { 
+        document.write(this.n,"<br>");
+    }
+}
+
+var o = new Obj();
+/*
+o.write();
+for(k in o)
+    document.write(k +" : "+o[k],"<br>")
+document.write("ok<br><br>");
+*/
+
+document.write(o);
+
+</script>
+
+
+
+</form>
+</body>

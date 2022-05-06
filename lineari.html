@@ -1,0 +1,65 @@
+<body>
+<script>
+
+function mult1(a, b) {
+    if (!b) return 0;
+    if (b&1) return a+mult1(a, b-1);
+    return double(mult1(a, b>>1));
+    function double(n) {
+       return n+n;
+    }
+}
+
+function mult2(a, b) {
+    return loop(b);
+    function loop (b) {
+       if (!b) return 0;
+       if (b&1) return a+loop(b-1);
+       return double(loop(b>>1));
+    }
+    function double(n) {
+       //return n+n;
+       return n>>1;
+    }
+}
+
+function mult3(a, b) {
+    for (var n=0; b; b>>=1) {
+       if (b&1) n=add(n, a);
+       a=add(a, a);
+    } 
+    return n;
+    function add(a, b) {
+       return a+b;
+    }
+}
+
+function mult4(a, b) {
+    for (var n=0; b; b>>=1) {
+       if (b&1) n+=a;
+       a+=a;
+    } 
+    return n;
+}
+
+function mult5(a, b) {
+    for (var n=0; b; b>>=1) {
+       if (b&1) n+=a;
+       a<<=1;
+    } 
+    return n;
+}
+
+function mult6(a, b) {
+    var n=0;
+    do {
+       if (b&1) n+=a;
+    } while (a<<=1, b>>=1);
+    return n;
+}
+
+document.write(mult6(6,3),"<br>");
+document.write(5<<1,"<br>");
+
+</script>
+</body>

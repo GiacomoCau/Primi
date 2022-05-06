@@ -1,0 +1,118 @@
+<body>
+<form>
+Scomposizione in fattori
+<br>
+primi per i numeri 
+<br>
+da <input type=text name=f size=8>
+ a <input type=text name=t size=8>
+<br><br>
+<input type=checkbox name=s>
+Stampa risultato 
+<br><br>
+<input type=submit value=esegui>
+<br><br>
+</form>
+<script src="Util.js"></script>
+<script>
+
+/* segmented sieve*/
+
+checkFormFromToAndExecute( main );
+
+function main( f, t, s ) {
+   var tm = new Timer;
+   var ps = SegSieve(t, 100000);
+   tm.parzial( "Primi" );
+   var cs = factorize( f, t, ps );
+   tm.parzial("Fattori");
+   tm.total("Totale");
+   if ( s ) writeTable( f, t, cs );
+}
+
+function SegSieve( t, d ) {
+   // segmented sieve
+   // return primes to t
+   // as properies of a object
+   // t: high limit
+   // d: size of segments
+   t += 1;
+   var ps = {};
+   var s, e = 2;
+   var q = 1 + sqrt(t);
+   do {
+      s = e;
+      e = min( s+d, q );
+      loopSeg( s, e, ps, newSeg( e, ps ));
+   } while ( e < q );
+   var ts={};
+   do {
+      s = e;
+      e = min( s+d, t );
+      scanSeg( s, e, ts, newSeg( e, ps ));
+   } while ( e < t );
+   cpyObj(ps, ts);
+   return ps;
+   function setMultiples(n, t, i, cs ) {
+      for (; n<t; n+=i ) 
+         cs[n] = true;
+      return n;
+   }
+   function newSeg( t, ps ) {
+      var cs = {};
+      for ( var p in ps ) {
+         var n = ps[p];
+         if ( n >= t ) break;
+         ps[p] = setMultiples( n, t, p*1, cs );
+      }
+      return cs;
+   }
+   function loopSeg(n, t, ps, cs) {
+      for(; n<t; n++ ) {
+         if ( cs[n] ) continue;
+         ps[n] = setMultiples( n+n, t, n, cs );
+      }
+   }
+   function scanSeg(n, t, ps, cs) {
+      for(; n<t; n++ ) {
+         if ( cs[n] ) continue;
+         ps[n] = true;
+      }
+   }
+}
+
+function factorize( f, t, ps ) {
+   // factorize numbers from f to t
+   // returns the factors 
+   // as values of properties
+   // of numbers in object
+   // f: low limit
+   // t: high limit
+   // ps: primes to t as properties
+   //      of a object
+   var cs = {};
+   for( var n=f; n<=t; n++ ) {
+      if ( isComposite( n, ps ) )
+         factors( n, ps, cs );
+   }
+   return cs;
+}
+
+function writeKeyValue( o, s ) { 
+   if ( s ) write(  s, ": " ); 
+   var n=0;
+   for ( k in o ) 
+      write( n++? " ":"", k, ":" ,o[k] )
+   writenl();
+}
+
+function writeKey( o, s ) { 
+   if ( s ) write(  s, ": "); 
+   var n=0;
+   for ( k in o ) 
+      write( n++? ", ":"", k )
+   writenl();
+}
+
+</script>
+</body>

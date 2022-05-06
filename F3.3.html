@@ -1,0 +1,186 @@
+<body>
+<form>
+Scomposizione in fattori primi per
+<br>
+i numeri 
+da <input type=text name=f size=5>
+ a <input type=text name=t size=5>
+<br><br>
+<input type=checkbox name=s>
+Stampa risultato 
+<br><br>
+<input type=submit value=esegui>
+<br><br>
+</form>
+<script src="Util.js"></script>
+<script>
+
+/* Viene effettuata la fattorizzazione
+utilizzando il primo fattore impostato
+per distinguere gli elementi composti.
+Viene utilizzata una particolare versione
+di setMultiple per non sovrascrivere il
+fattore più piccolo e mantenere ordinata
+la progressione dei fattori, essendo più
+lenta dovrebbe essere sostituita da un
+ordinamento in visualizzazione.
+Dovrebbe essere la fattorizzazione più
+veloce, di contro usa un elemento per
+numero composto.
+l'ordine dei fattori si articola fra 2 estremi
+1) il minimo: in questo caso posso
+limitare il ciclo alla sqrt(n) ma non devo
+sovrascrivere i fattori già assegnati con
+un setMultiple che testa prima di
+assegnare
+2) il massimo: in questo caso la 
+setMultiple può essere ignorante ma il 
+ciclo deve protratto sino ad n.
+3) in mezzo limitare alla sqrt(n) con una
+setMultiple ignorante obbliga 
+all'ordinamento in fase di stampa*/
+
+checkFormFromToAndExecute( main );
+
+function main(f, t, s) {
+   var tm = new Timer
+   var ps = {}
+   var cs = new Array( t + 1 )
+   for( var n=2; n<=t; n++ ) {
+      if ( cs[n] ) {
+         if ( n >= f ) factors4(n, ps, cs)
+      }
+      else {
+         setMultiples(n, t, cs, n)
+      }
+   }
+   tm.total()
+   if (s) writeTable( f, t, cs )
+}
+
+function factors1(n, ps, cs) {
+   // Se usi questa versione ripristina la
+   // valorizzazione di ps nel main.
+   // Fattori crescenti.
+   var p = cs[n]
+   if (p.constructor != Object) {
+      var fs = cs[n] = {}
+      if ( ps[n/=p] ) 
+         fs[n] = 1
+      else {
+         factors1(n, ps, cs)
+         cpyObj1(fs, cs[n])
+      }
+      incExp1(p, fs)
+   }
+}
+
+function factors2(n, ps, cs) {
+   // contrariamente alle aspettative
+   // l'eliminazione della valorizzazione e
+   // dell'uso di ps migliora il tutto.
+   // Fattori crescenti.
+   var p = cs[n]
+   if (p.constructor != Object) {
+      var fs = cs[n] = {}
+      if ( cs[n/=p] ) {
+         factors2(n, ps, cs)
+         cpyObj(fs, cs[n])
+      }
+      else {
+         fs[n] = 1
+      }
+      incExp1(p, fs)
+   }
+}
+
+function factors3(n, ps, cs) {
+   // Fattori crescenti
+   var p = cs[n]
+   if (p.constructor == Object) return
+   var fs = cs[n] = {}
+   if ( cs[n/=p] ) {
+      factors3(n, ps, cs)
+      cpyObj1(fs, cs[n])
+   }
+   else
+      fs[n] = 1
+   incExp1(p, fs)
+}
+
+function factors4(n, ps, cs) {
+   // Probabilmente la migliore.
+   // Fattori crescenti
+   var p = cs[n]
+   if (p.constructor == Object) return p;
+   var fs = cs[n] = {}
+   if ( cs[n/=p] ) 
+      cpyObj1(fs, factors4(n, ps, cs))
+   else
+      fs[n] = 1
+   incExp1(p, fs) // fattori crescenti
+   return fs
+}
+
+function factors5(n, ps, cs) {
+   // Fattori crescenti.
+   var p = cs[n]
+   if (p.constructor == Object) return p
+   var fs = cs[n] = {}
+   if ( cs[n/=p] ) 
+      cpyObj1(fs, factors5(n, ps, cs))
+   else
+      fs[n] = 1
+   return incExp2(p, fs)
+}
+
+function factors6(n, ps, cs) {
+   // Fattori crescenti
+   var p = cs[n];
+   if (p.constructor == Object) return p;
+   return cs[n] = 
+      incExp2(p, cs[n/=p]
+         ? cpyObj2({}, factors6(n, ps, cs))
+         : incExp2(n, {})
+      );
+}
+
+function factors7(n, ps, cs) {
+   // Fattori crescenti
+   var p = cs[n];
+   return p.constructor == Object
+   ? p
+   : cs[n] = 
+      incExp2(p, 
+         cs[n/=p]
+         ? cpyObj2({}, factors7(n, ps, cs))
+         : incExp2(n, {})
+      );
+}
+
+function incExp1(n, f) {
+   if ( f[n] )
+      f[n]++;
+   else
+      f[n]=1;
+}
+  
+function cpyObj1(t, f) {
+   for (k in f) t[k] = f[k];
+}
+
+function incExp2(n, f) {
+   if ( f[n] )
+      f[n]++;
+   else
+      f[n]=1;
+   return f;
+}
+  
+function cpyObj2(t, f) {
+   for (k in f) t[k] = f[k];
+   return t;
+}
+
+</script>
+</body>

@@ -1,0 +1,95 @@
+<body>
+<form>
+
+Identificazione dei numeri composti
+<br>
+da 2 sino a
+<input type=text name=t size=5>
+<br>
+<input type=checkbox name=s>
+Stampa risultato 
+<br><br>
+<input type=submit value=esegui>
+<br><br>
+
+</form>
+<script src="Util.js"></script>
+<script>
+
+/* qui si sperimenta la trial division con
+i primi contenuti come proprieta di  un
+oggetto.
+All'oqgetto sono aggiunti i primi che 
+mano mano vengono trovati */
+
+checkFormToAndExecute( main );
+
+function main(t, s) {
+   var tm = new Timer();
+   var cs = primes( t );
+   tm.parzial();
+   if (s) cs.print(t);   
+}
+
+function primes(t) {
+   var pv={};
+   for ( var n=2; n<t; n++ ) {
+      if ( isPrime3(n, pv) )
+         pv[n]=true;
+   }
+   pv.print = function printTablePs (t) {
+	   for(var i=2; i<=t; i++) {
+	      writenl(i,  this[i] ? '' : ' = composto');
+	   }
+	}
+   return pv;
+}
+
+function isPrime1(n, ps) {
+    // la più lenta  
+    var s = sqrt( n );
+    for (var p in ps) {
+       if ( p > s ) return true;
+       if ( n % p == 0)  return false;
+    }
+    return true;
+}
+
+function isPrime2(n, ps) { 
+    // un pò piu veloce 
+    var s = sqrt( n );
+    for ( var p in ps ) {
+       if ( p > s ) return true;
+       if ( !( n % p ))  return false;
+    }
+    return true;
+}
+
+//2200ms  n=10000
+function isPrime3( n, ps ) {
+    // leggermente più veloce
+    var s = sqrt( n );
+    for ( var p in ps ) {
+       if ( p > s ) return true;
+       if ( n % p ) continue;
+       return false;
+    }
+    return true;
+}
+
+//1800ms  n=10000
+function isPrime4( n, ps ) {
+    // ancora più veloce.
+    // È sorprendente avrei pensato che
+    // 1 sqrt fosse meglio di 1 mult a ciclo
+    for ( var p in ps ) {
+       if ( p * p > n ) return true;
+       if ( n % p ) continue;
+       return false;
+    }
+    return true;
+}
+
+
+</script>
+</body>

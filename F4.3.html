@@ -1,0 +1,148 @@
+<body>
+<form>
+
+Scomposizione in fattori primi per
+<br>
+i numeri 
+da <input type=text name=f size=5>
+ a <input type=text name=t size=5>
+<br><br>
+<input type=checkbox name=s>
+Stampa risultato 
+<br><br>
+<input type=submit value=esegui>
+<br><br>
+</form>
+<script src="Util.js"></script>
+<script>
+
+/* si provano gli wheel increments 
+utilizzando delle liste circolari
+*/
+
+checkFormFromToAndExecute( main3 );
+
+function main1(f, t, s) {
+   var tm = new Timer;
+   var is = {i:2};
+   is.n = is; //rendo circolare la lista
+
+   var ts = {};
+   for( var n=1+is.i; n<=t; is=is.n, n+=is.i) {
+      if( isPrime(n, ts) ) 
+         ts[n]=true;
+   }
+
+   var ps = {};
+   ps[2] = true;
+   cpyObj(ps, ts);
+   tm.parzial('Primi');
+
+   var cs = {};
+   for( var n=f ; n<=t; n++ ) {
+      if( isComposite(n, ps) ) {
+         factors(n, ps, cs);
+      }
+   }
+   tm.parzial('Fattori');
+   tm.total();
+   if (s) writeTable(f, t, cs);
+}
+
+
+function main2(f, t, s) {
+   var tm = new Timer;
+   var is = {i:4, n:{i:2}};
+   is.n.n = is; //rendo circolare la lista
+
+   var ts = {};
+   for( var n=1+is.i; n<=t; is=is.n, n+=is.i) {
+      if( isPrime(n, ts) ) 
+         ts[n]=true;
+   }
+
+   var ps = {};
+   ps[2] = true;  
+   ps[3] = true;  
+   cpyObj(ps, ts);
+   tm.parzial('Primi');
+
+   var cs = {};
+   for( var n=f ; n<=t; n++ ) {
+      if( isComposite(n, ps) ) {
+         factors(n, ps, cs);
+      }
+   }
+   tm.parzial('Fattori');
+   tm.total();
+   if (s) writeTable(f, t, cs);
+}
+
+function main3(f, t, s) {
+   var tm = new Timer;
+   var is = circularize(4,2);
+
+   var ts = {};
+   for( var n=1+is.i; n<=t;  is=is.n, n+=is.i) {
+      if( isPrime(n, ts) ) 
+         ts[n]=true;
+   }
+
+   var ps = {};
+   ps[2] = true;  
+   ps[3] = true;    
+   cpyObj(ps, ts);
+   tm.parzial('Fattori');
+
+   var cs = {};
+   for( var n=f; n<=t; n++ ) {
+      if( isComposite(n, ps) ) {
+         factors(n, ps, cs);
+      }
+   }
+   tm.parzial('Fattori');
+   tm.total();
+   if (s) writeTable(f, t, cs);
+}
+
+function main4(f, t, s) {
+   var tm = new Timer;
+   var is = circularize(6,4,2,4,2,4,6,2);
+
+   var ts = {};
+   for( var n=1+is.i; n<=t;  is=is.n, n+=is.i) {
+      if( isPrime(n, ts) ) 
+         ts[n]=true;
+   }
+
+   var ps = {};
+   ps[2] = true;  
+   ps[3] = true;    
+   ps[5] = true;   
+   cpyObj(ps, ts);
+   tm.parzial('Fattori');
+
+   var cs = {};
+   for( var n=f; n<=t; n++ ) {
+      if( isComposite(n, ps) ) {
+         factors(n, ps, cs);
+      }
+   }
+   tm.parzial('Fattori');
+   tm.total();
+   if (s) writeTable(f, t, cs);
+}
+
+
+function circularize() {
+   var is = {}
+   var ls = is
+   for(var i = arguments.length;;) {
+      is.i = arguments[--i]
+      if (!i) break
+      is = {n:is}
+   }
+   return ls.n = is
+}
+
+</script>

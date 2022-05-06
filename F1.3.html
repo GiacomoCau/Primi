@@ -1,0 +1,102 @@
+<body>
+<form>
+
+Identificazione dei numeri composti
+<br>
+da 2 sino a 
+<input type=text name=t size=5>
+<br>
+<input type=checkbox name=s>
+Stampa risultato 
+<br><br>
+<input type=submit value=esegui>
+<br><br>
+
+</form>
+<script src="Util.js"></script>
+<script>
+
+/* 
+	trial division con i primi contenuti:
+		in un array primesV(1-4)
+		in un object primesS(5-6)
+	Al vettore/object sono aggiunti i primi
+	che mano mano vengono trovati
+*/
+
+checkFormToAndExecute( main );
+
+function main(t, s) {
+   var tm = new Timer()
+   var p = primesS(t)
+   tm.total()
+	if (s) p.write(t)  
+}
+
+function primesV(t) {
+ 	var pv=[]
+	for ( var n=2; n<t; n++ ) {
+		if ( isPrime3(n, pv) ) pv[pv.length]=n
+			//alert('primes:'+ {n:n, pv:pv})
+		}
+		pv.write = function (t) {
+		for (var j=0, i=2; i<=t; i++ ) {
+			writenl(i,  i==this[j] ? (j++, '') : ' = composto')
+		}
+	}
+	return pv
+}
+
+function primesS(t) {
+	var ps={}
+	for ( var n=2; n<t; n++ ) {
+		if ( isPrime3(n, ps) ) ps[n]=true
+			//alert('primes:'+ {n:n, ps:ps})
+		}
+		ps.write = function (t) {
+		for (var i=2; i<=t; i++ ) {
+      		writenl(i,  i in this ? '' : ' = composto')
+		}
+	}
+	return ps
+}
+
+
+
+//660-720ms n=10000
+function isPrime1(n, pv) {
+	for( var i=0; pv[i]*pv[i]<=n; i++ ) {
+		if( n % pv[i] == 0 ) return false
+	}
+	return true //nessun primo lo divide senza resto
+}
+
+//660ms n=10000
+function isPrime2(n, pv) {
+	for ( var i=0; pv[i]*pv[i]<=n; i++ ) {
+		if ( n % pv[i] ) continue
+		return false;
+	}
+	return true
+}
+
+//440-500ms n=10000, la più veloce!
+function isPrime3(n, pv) {
+	for ( var p, i=0; p=pv[i], p*p<=n; i++ ) {
+		if ( n % p ) continue
+		return false;
+	}
+	return true
+}
+
+//770ms n=10000, meno veloce della precedente. dipende dalla sqrt()!
+function isPrime4(n, pv) {
+	for ( var p, i=0, e=sqrt(n); p=pv[i], p<=e; i++ ) {
+		if ( n % p ) continue
+	return false
+	}
+	return true 
+}
+
+</script>
+</body>

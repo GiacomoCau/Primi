@@ -1,0 +1,315 @@
+<body>
+<form>
+
+Scomposizione in fattori primi per
+<br>
+i numeri da 2 sino a
+<input type=text name=t size=5>
+<br>
+<input type=checkbox name=s>
+Stampa risultato 
+<br><br>
+<input type=submit value=esegui>
+<br><br>
+
+</form>
+<script src="Util.js"></script>
+<script>
+
+/* si inizia la fattorizzazione
+i primi sono trovati con il crivello
+e custoditi come valori in un vattore.
+La fattorizzazione è progressiva e 
+contemporanea alla ricerca dei primi.
+*/
+
+checkFormToAndExecute( main );
+
+function main(t, s) {
+   var tm = new Timer;
+   var cs = new Array( t + 1 );
+   var pv = new Array( Math.floor(t / ( Math.log(t) - 1 )));
+   for(var i=0, n=2; n<=t; n++) {
+      if ( cs[n] ) {
+         factors92(n, pv, cs);
+      }
+      else {
+         pv[i++]=n;
+         setMultiples(n, t, cs)
+      }
+   }
+   tm.total();
+   if (s) writeTable( 2, t, cs );
+}
+
+
+
+
+function factors1(n, pv, cs) {
+   // vengono trovati tutti i fattori di n
+   // con i rispettivi esponenti attraverso
+   // ripetute divisioni per i numeri primi
+   // inferiori al numero.
+   // Fattori in ordine crescente.
+   var i = 0;
+   var p = pv[i++];
+   var fs = cs[n] = {};
+   while( n > 1 ) {
+      if ( n % p  != 0 )
+         p = pv[i++];
+      else {
+         incExp( fs, p )
+         n /= p;
+      }
+   }
+}
+
+function factors2(n, pv, cs) {
+   // i ed p sono variabili della for
+   // non dovrebbe cambiare nulla
+   // se non per l'eliminazione di !=0.
+   // Fattori in ordine crescente.
+   var fs = cs[n] = {};
+   for(var i = 0, p = pv[i++]; n > 1; ) {
+      if ( n % p ) 
+         p = pv[i++];
+      else {
+         incExp( fs, p );
+         n /= p;
+      }
+   }
+}
+
+function factors3(n, pv, cs) {
+   // il controllo è un poco convoluto ma
+   // p=pv[i++] è collocato in solo posto.
+   // Fattori in ordine crescente.
+   var i = 0;
+   var fs = cs[n] = {};
+   for(;;) {
+      var p = pv[i++];
+      while ( n % p == 0 ) {
+         incExp( fs, p );
+         if ((n /= p ) == 1 ) return;
+      }
+   }
+}
+
+function factors4(n, pv, cs) {
+   // cerca il primo fattore poi lo
+   // aggiunge a quelli del numero 
+   // trovato dalla divisione per il fattore.
+   // Trattamento particolare se è un
+   // primo visto che non ha fattori.
+   // Fattori in ordine decrescente.
+   var i = 0;
+   var fs = cs[n] = {};
+   while ( n % pv[i] ) i++;
+   n /= pv[i];
+   if ( cs[n] ) {
+      cpyObj(fs, cs[n]);
+   }
+   else {
+      fs[n]=1;
+   }
+   incExp(fs, pv[i]);
+}
+
+function factors5(n, pv, cs) {
+   // Una piccola ottimizzazione,
+   // l'incremento è stato portato nel
+   // test , deve però essere tolto
+   // in uscita.
+   // Fattori in ordine decrescente.
+   var i = 0;
+   var fs = cs[n] = {};
+   while ( n % pv[i++] );
+   n /= pv[--i];
+   if ( cs[n] ) {
+      cpyObj(fs, cs[n]);
+   }
+   else {
+      fs[n]=1;
+   }
+   incExp(fs, pv[i]);
+}
+
+function factors6(n, pv, cs) {
+   // altra piccola ottimizzazione
+   // il fattore viene di nuovo salvato
+   // Fattori in ordine decrescente.
+   var fs = cs[n] = {};
+   var p, i=0; while ( n % (p = pv[i++]));
+   if ( cs[n /= p] ) {
+      cpyObj(fs, cs[n]);
+   }
+   else {
+      fs[n]=1;
+   }
+   incExp(fs, p);
+}
+
+function factors7(n, pv, cs) {
+   // Fattori in ordine crescente.
+   var p, i=0;
+   var fs = cs[n] = {};
+   while ( n % (p = pv[i++]));
+   fs[p] = 1; //è la causa dell'ordinamento
+   if ( cs[n /= p] ) {
+      addFactors(fs, cs[n]);
+   }
+   else {
+      incExp(fs, n);
+   }
+}
+
+function addFactors( t, f ) {
+   for ( var e in f ) addExp(t, e, f[e]);
+}
+
+function addExp( fs, i, n ) {
+  if ( fs[i] )
+    fs[i] += n;
+  else
+    fs[i] = n;	
+}
+
+function factors80(n, pv, cs) {
+   // Si tiene conto del fatto che solo un
+   // fattore potrebbe andare perduto
+   // ma solo se presente.
+   // Fattori in ordine crescente.
+   var ts = cs[n] = {};
+   var p, i = 0; while ( n % (p = pv[i++]) );
+   ts[p] = 1; //è la causa dell'odinamento
+   if ( cs[n /= p] ) {
+      cpyObj(ts, cs[n]);
+      if (cs[n][p]) ts[p]++;
+   }
+   else {
+      incExp(ts, n);
+   }
+}
+
+function factors81(n, pv, cs) {
+   // Si tiene conto del fatto che solo un
+   // fattore potrebbe andare perduto
+   // ma solo se presente.
+   // Fattori in ordine crescente.
+   var ts = cs[n] = {};
+   var p, i = 0; while ( n % (p = pv[i++]) );
+   ts[p] = 1; //è la causa dell'ordinamento
+	var fs = cs[n /= p]
+   if ( fs ) {
+      cpyObj(ts, fs);
+      if (fs[p]) ts[p]++;
+   }
+   else {
+      incExp(ts, n);
+   }
+}
+
+function factors82(n, pv, cs) {
+   // Si tiene conto del fatto che solo un
+   // fattore potrebbe andare perduto
+   // ma solo se presente.
+   // Fattori in ordine crescente.
+   var fs, ts = cs[n] = {}
+   var p, i = 0; while ( n % (p = pv[i++]) );
+	ts[p] = 1; //è la causa dell'ordinamento
+   if ( fs = cs[n /= p] ) {
+      cpyObj(ts, fs)
+      if ( fs[p] ) ts[p]++
+   }
+   else {
+      incExp(ts, n)
+   }
+}
+
+
+function factors83(n, pv, cs) {
+   // Sintetizzando il tutto.
+   // Fattori in ordine crescente.
+   var fs, ts = cs[n] = {}
+   var p, i = 0; while ( n % (p = pv[i++]) );
+   ts[p] = 1 //è la causa dell'ordinamento  
+	if ( fs = cs[n /= p] ) { // funziona se tutti i minori sono fattorizzati
+		//un primo ed un composto (è contenuto in cs)
+		cpyFactors(ts, fs, p)
+   }
+   else {
+		//due primi (a volte uguali)
+      incExp(ts, n)
+   }
+}
+
+
+function factors90(n, pv, cs) {
+   // Sintetizzando il tutto.
+   // Fattori in ordine crescente.
+   var fs, ts = cs[n] = {}
+   var p, i = 0; while ( n % (p = pv[i++]) );
+   ts[p] = 1 //è la causa dell'odinamento  
+	if ( fs = cs[n /= p] ) { // funziona se tutti i minori sono fattorizzati
+		//un primo ed un composto (è contenuto in cs)
+		cpyFactors(ts, fs, p)
+   }
+   else {
+		//due primi (a volte uguali)
+      incExp(ts, n)
+   }
+}
+
+
+function factors91(n, pv, cs) {
+   // una diversa struttura di controllo
+   // non migliora nulla se non la chiarezza.
+   // Fattori in ordine crescente.
+   var fs, ts = cs[n] = {}
+   var p, i = 0; do p = pv[i++]; while ( n % p )
+   ts[p] = 1 //è la causa dell'ordinamento
+   if ( fs = cs[n /= p] ) { // funziona se tutti i minori sono fattorizzati
+		//un primo ed un composto (è contenuto in cs)
+      cpyFactors(ts, fs, p)
+   }
+   else {
+		//due primi (a volte uguali)
+      incExp(ts, n)
+   }
+}
+
+
+function factors92(n, pv, cs) {
+   // Sintetizzando il tutto.
+   // Fattori in ordine crescente.
+   var fs, ts = cs[n] = {}
+   for (var p, i = 0;  n % (p = pv[i++]);  );
+   ts[p] = 1 //è la causa dell'ordinamento  
+	if ( fs = cs[n /= p] ) { // funziona se tutti i minori sono fattorizzati
+		//un primo ed un composto (è contenuto in cs)
+		cpyFactors(ts, fs, p)
+   }
+   else {
+		//due primi (a volte uguali)
+      incExp(ts, n)
+   }
+}
+
+function factors92(n, pv, cs) {
+   // Sintetizzando il tutto.
+   // Fattori in ordine crescente.
+   var fs, ts = cs[n] = {}
+   for (var p, i=0;  n % (p = pv[i++]);  );
+   ts[p] = 1 //è la causa dell'ordinamento  
+	if ( fs = cs[n /= p] ) { // funziona se tutti i minori sono fattorizzati
+		//un primo ed un composto (è contenuto in cs)
+		cpyFactors(ts, fs, p)
+   }
+   else {
+		//due primi (a volte uguali)
+      incExp(ts, n)
+   }
+}
+
+</script>
+</body>

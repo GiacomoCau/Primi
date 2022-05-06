@@ -1,0 +1,102 @@
+ <body>
+<form>
+
+Scomposizione in fattori primi per
+<br>
+i numeri 
+da <input type=text name=f size=5>
+ a <input type=text name=t size=5>
+<br><br>
+<input type=checkbox name=s>
+Stampa risultato 
+<br><br>
+<input type=submit value=esegui>
+<br><br>
+</form>
+<script src="Util.js"></script>
+<script>
+
+/* qui la fattorizzazione non avviene per 
+tutti i numeri composti ma solo a partire
+da un certo limite, va tenuto conto che 
+si potrebbe trovare un composto non
+fattorizzato che è distinto dal valore true 
+lasciato dal crivello.
+La fattorizzazione è ricorsiva e 
+contemporanea alla ricerca dei primi che 
+sono contenuti come valori in un
+vettore */
+
+checkFormFromToAndExecute( main );
+
+function main(f, t, s) {
+   var tm = new Timer;
+   var cs = new Array( t + 1 );
+   var pv = new Array( Math.floor(t / ( Math.log(t) - 1 )));
+   for( var i=0, n=2; n<=t; n++ ) {
+		//alert('main:' + {n:n, pv:pv, cs:cs})
+      if ( cs[n] ) {
+         if ( n >= f ) factors2(n, pv, cs);
+      }
+      else {
+         pv[i++] = n;
+         setMultiples(n, t, cs)
+      }
+   }
+   tm.total();
+   if (s) writeTable( f, t, cs);
+}
+
+function factors1(n, pv, cs) {
+   // Fattori decrescenti
+   var p, i=0; while ( n % (p = pv[i++]));
+   var fs, ts = cs[n] = {};
+   if ( fs = cs[n /= p] ) {
+		// se composto ma non fattorizzato
+      if( fs === true ) fs = factors1(n, pv, cs);
+      cpyObj(ts, fs);
+   }
+   else {
+      ts[n] = 1;
+   }
+   incExp(ts, p);
+	return ts
+}
+
+function factors2(n, pv, cs) {
+	// Fattori crescenti
+	//alert('factors2:' + {n:n, pv:pv, cs:cs})
+	var p, i=0; while ( n % (p = pv[i++]));
+	var fs, ts = cs[n] = {}
+	ts[p] = 1
+	if ( fs = cs[n /= p] ) {
+		// se composto ma non fattorizzato
+		if( fs === true ) fs = factors2(n, pv, cs)
+		cpyFactors(ts, fs, p)
+   }
+   else {
+      incExp(ts, n)
+   }
+	return ts
+}
+
+function factors3(n, pv, cs) {
+   // questa è piu lenta per la ricerca
+   // dicotomica anche se il numero dei
+   // primi è inferiore ai composti.
+   // per sveltirla i primi dovrebbero
+   // essere proprietà di un oggetto.
+   // Fattori decrescenti.
+   var p, i=0;  while ( n % (p = pv[i++]));
+   var ts = cs[n] = {}
+   if ( inD(n /= p , pv) )
+      ts[n]=1
+   else {
+      if( cs[n] === true ) factors3(n, pv, cs)
+      cpyObj(ts, cs[n])
+   }
+   incExp(ts, p)
+}
+
+</script>
+</body>

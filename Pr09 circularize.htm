@@ -1,0 +1,127 @@
+<body>
+<script src="Util.js"></script>
+<script>
+
+var v = [1,2,3,4,5]
+print( cl1( v ) )
+print( cl2( v ) )
+print( cl3( v ) )
+print( cl4( v ) )
+print( cl5( v ) )
+print( cl6( v ) )
+print( cl7( v ) )
+print( cl9( v ) )
+
+
+function cl1 (v) {
+   var l = {}, f = l
+   var i = 0, e = v.length
+   for (;;) {
+      l.i = v[i++]
+      if ( i==e ) break
+      l = l.n = {}
+   }
+   return l.n = f;
+}
+
+function cl3 (v) {
+   var f={};
+   var i=0, e = v.length 
+   return rec(f).n = f
+   function rec(l) {
+      l.i = v[i++]
+      return i==e ? l : rec( l.n={} )
+   }
+}
+
+function cl5 (v) {
+   var f={};
+   var i=0, e = v.length 
+   return rec(f)
+	function rec(l) {
+      l.i = v[i++]
+      return i==e ? l.n=f : rec( l.n={} )
+   }
+}
+
+function cl7 (v) {
+   var f={}
+   var i=0, e = v.length 
+   return rec(f)
+   function rec(l) {
+      l.i = v[i++]
+      l.n = i==e ? f : rec( {} )
+      return l;
+   }
+}
+
+
+function cl9 (v) {
+   var f = {}
+   var i=0, e = v.length 
+   return function r(l) {
+      l.i = v[i++]
+      l.n = i==e ? f : r( {} )
+      return l;
+   } (f)
+}
+
+
+
+function cl2 (v) {
+   var l = {}
+   var f = l
+   var i = v.length
+   for (;;) {
+      l.i = v[--i]
+      if ( !i ) break
+      l = { n:l }
+   }
+   return f.n = l
+}
+
+function cl4 (v) {
+   var f = {}
+   var i = v.length;
+   return f.n = rec(f)
+   function rec( l ) {
+      l.i = v[--i];
+      return i ? rec( {n:l} ) : l
+   }
+}
+
+function cl6 (v) {
+   var f = {}
+   var i = v.length
+   return rec(f)
+	function rec( l ) {
+      l.i = v[--i]
+      return i ? rec( {n:l} ) : f.n=l   
+   }
+}
+
+
+
+
+function cl0 (v) {
+	//occhio che sbidona v
+   var e = v.length
+   for (var i=0; i<e; ) v[i] = {i:v[i++]}
+   for (var i=0; i<e; ) v[i++].n = v[i%e]
+   return v[0]
+}
+
+
+
+function print( ls ) {
+	var i = ls, o = 0
+   do 
+      document.write( o++ ? ', ' : '',  ls.i )
+	while (i != (ls = ls.n) )
+   document.write(', ...<br>')
+}
+
+
+</script>
+
+</body>

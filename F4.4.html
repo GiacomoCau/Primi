@@ -1,0 +1,63 @@
+<body>
+<form>
+Scomposizione in fattori primi per
+<br>
+i numeri 
+da <input type=text name=f size=5>
+a <input type=text name=t size=5>
+<br><br>
+<input type=checkbox name=s>
+Stampa risultato 
+<br><br>
+<input type=submit value=esegui>
+<br><br>
+</form>
+
+<script src="Util.js"></script>
+<script>
+
+checkFormFromToAndExecute(main);
+
+function main( f, t, s ) {
+   var tm = new Timer;
+
+   var ps = primes2( t, [2,3,5,7] );
+   tm.parzial('Primi');
+
+   var cs = {};
+   for ( var n=f; n<=t; n++ ) {
+      if (  isComposite( n, ps ) ) {
+         factors( n, ps, cs );
+      }
+   }
+   tm.parzial('Fattori');
+   tm.total('Totale');
+   if (s) writeTable( f, t, cs );
+}
+
+function primes2( t, pv ) {
+   var ts = {};
+   var is = wheelIncrements( pv );
+   for ( var n=1+is.i; n<=t;  is=is.n, n+=is.i) {
+      if ( isPrime( n, ts ) ) ts[n] = true;
+   }
+   var ps = {};
+   cpyArr( ps, pv );
+   cpyObj( ps, ts );   
+   return ps;
+}
+
+function primes3( t, pv ) {
+   var ts = {};
+   var ws = new WheelIncrements( pv );
+   for ( var n=ws.start(); n<=t;  n+=ws.next()) {
+      if ( isPrime( n, ts ) ) ts[n] = true;
+   }
+   var ps = {};
+   cpyArr( ps, pv );
+   cpyObj( ps, ts );   
+   return ps;
+}
+
+</script>
+</body>

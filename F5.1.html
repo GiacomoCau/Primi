@@ -1,0 +1,334 @@
+<body>
+<form>
+
+Scomposizione in fattori primi
+<br>
+ per il numero 
+<input type=text name=n size=8>
+<br>
+<input type=submit value=esegui>
+<br><br>
+
+</form>
+<script src="Util.js"></script>
+<script>
+
+checkFormNumAndExecute( main );
+
+function main( n ) {
+   var tm = new Timer;
+   var f = factorize1(n);
+   tm.total();
+   write( n, " " );
+   if ( f ) 
+      writeFactors( f );
+   else
+      write('= primo');
+}
+
+function factorize1( n ) {
+   var i = 2;
+   var e = sqrt(n);
+   if ( i > e ) return null;  
+   while ( n % i ) {
+      if ( ++i > e ) return null;
+   }
+   var fs = {};
+   for( ;; ) {
+      incExp( fs, i );
+      if (( n /= i ) == 1 ) return fs;
+      while ( n % i ) i++;
+   }
+}
+
+function factorize2a( n ) {
+   var fs = {};
+   var i, e = sqrt(n);
+   if ((i=2) > e) return null;   
+   if ( n % i ) {
+      if ((i=3) > e) return null;
+      while ( n % i ) {
+         if ((i+=2) > e ) return null;
+      }
+   }
+   else {
+      do {
+         incExp( fs, i );
+         if (( n /= i ) == 1 ) return fs;
+      } while ( n % i == 0 );
+      i=3;
+   }
+   for( ;; ) {
+      while ( n % i ) i+=2;
+      incExp( fs, i );
+      if (( n /= i ) == 1 ) return fs;
+   }
+}
+
+function factorize2b( n ) {
+   var fs = {};
+   var f = firstFactor2( n );
+   if ( !f ) return null;
+   if ( f == 2 ) {
+      do {
+         incExp( fs, f );
+         if (( n /= f ) == 1 ) return fs;
+      } while ( n % f == 0 );
+      f = 3 ;
+      while ( n % f ) f+=2;
+   }
+   for( ;; ) {
+      incExp( fs, f );
+      if (( n /= f ) == 1 ) return fs;
+      while ( n % f ) f+=2;
+   }
+}
+
+function factorize24a( n ) {
+   var fs = null;
+   if ( n == 2 ) return null;
+   if ( n % 2 == 0) {
+     fs = {};
+     do  {
+         incExp( fs, 2 );
+         if (( n /= 2 ) == 1 ) return fs;
+      } while ( n % 2 == 0 );
+   }
+   if ( n == 3 && !fs ) return null;
+   if ( n % 3 == 0 ) {
+     if ( !fs ) fs = {};
+     do  {
+         incExp( fs, 3 );
+         if (( n /= 3 ) == 1 ) return fs;
+      } while ( n % 3 == 0 );
+   }
+   var f=5, i=2;
+   if ( fs == null ) {
+      var e = sqrt(n);
+      for (; f<=e; f+=i, i=6-i )
+         if ( n % f == 0 ) break;
+      if ( f > e ) return null;
+   }
+   if ( !fs ) fs = {};
+   for( ;; ) {
+      incExp( fs, f );
+      if (( n /= f ) == 1 ) return fs;
+      while ( n % f ) { f+=i; i=6-i };
+   }
+}
+
+function factorize24b( n ) {
+   var fs = null;
+   if ( n == 2 ) return null;
+   if ( n % 2 == 0) {
+     fs = {};
+     n = collect( n, 2, fs );
+     if ( n == 1 ) return fs;
+   }
+   if ( n == 3 && !fs ) return null;
+   if ( n % 3 == 0 ) {
+     if ( !fs ) fs = {};      
+     n = collect( n, 3, fs );
+     if ( n == 1 ) return fs;
+   }
+   var f=5, i=2;
+   if ( fs == null ) {
+      var e = sqrt(n);
+      for(; f<=e; f+=i, i=6-i )  {
+         if ( n % f ) continue;
+         break;
+      }
+      if ( f > e ) return null;
+   }
+   if ( !fs ) fs = {};
+   for( ;; ) {
+      incExp( fs, f );
+      if (( n /= f ) == 1 ) return fs;
+      while ( n % f ) { f+=i; i=6-i };
+   }
+   function collect( n, f, fs ) {
+      do  {
+         incExp( fs, f );
+         if (( n /= f ) == 1 ) break;
+      } while ( n % f == 0 );
+      return n;
+   }
+}
+
+function factorize24c( n ) {
+   var fs = null;
+   var fv = [2, 3];
+   for (var i in fv) {
+      var f = fv[i];
+      if ( n == f && !fs ) return null;
+      if ( n % f == 0 ) {
+         if ( !fs ) fs = {};      
+         n = collect( n, f, fs );
+      }
+   }
+   var f=5, i=2;
+   if ( fs == null ) {
+      var e = sqrt(n);
+      for(; f<=e; f+=i, i=6-i )  {
+         if ( n % f ) continue;
+         break;
+      }
+      if ( f > e ) return null;
+   }
+   if ( !fs ) fs = {};
+   for( ;; ) {
+      while ( n % f ) { f+=i; i=6-i };
+      incExp( fs, f );
+      if (( n /= f ) == 1 ) return fs;
+   }
+   function collect( n, f, fs ) {
+      do  {
+         incExp( fs, f );
+         if (( n /= f ) == 1 ) break;
+      } while ( n % f == 0 );
+      return n;
+   }
+}
+
+function factorize24d( n ) {
+   var fs = null;
+   var fv = [2, 3];
+   for (var i in fv) {
+      var f = fv[i];
+      if ( n == f && !fs ) return null;
+      if ( n % f == 0 ) {
+         if ( !fs ) fs = {};      
+         do  {
+            incExp( fs, f );
+            if (( n /= f ) == 1 ) return fs;
+         } while ( n % f == 0 );
+      }
+   }
+   var f=5, i=2;
+   if ( fs ) {
+      for( ;; ) {
+         while ( n % f ) { f+=i; i=6-i };
+         incExp( fs, f );
+         if (( n /= f ) == 1 ) return fs;
+      }
+   }
+   else {
+      var e = sqrt(n);
+      for(; f<=e; f+=i, i=6-i )  {
+         if ( n % f ) continue;
+         break;
+      }
+      if ( f > e ) return null;
+      fs = {};
+      for( ;; ) {
+         incExp( fs, f );
+         if (( n /= f ) == 1 ) return fs;
+         while ( n % f ) { f+=i; i=6-i };
+      }
+   }
+}
+
+function factorize24e( n ) {
+   var fs = null;
+   var fv = [2, 3];
+   for (var i in fv) {
+      var f = fv[i];
+      if ( n == f && !fs ) return null;
+      if ( n % f == 0 ) {
+         if ( !fs ) fs = {};      
+         do  {
+            incExp( fs, f );
+            if (( n /= f ) == 1 ) return fs;
+         } while ( n % f == 0 );
+      }
+   }
+   var f=5, i=2;
+   if ( fs ) {
+      do {
+         while ( n % f ) { f+=i; i=6-i };
+         incExp( fs, f );
+      } while (( n /= f ) > 1 );
+      return fs;
+   }
+   else {
+      var e = sqrt(n);
+      for(; f<=e; f+=i, i=6-i )  {
+         if ( n % f ) continue;
+         break;
+      }
+      if ( f > e ) return null;
+      fs = {};
+      for( ;; ) {
+         incExp( fs, f );
+         if (( n /= f ) == 1 ) return fs;
+         while ( n % f ) { f+=i; i=6-i };
+      }
+   }
+}
+
+/*
+2 3 4 5 6 7 8 9 10
++ +   +    +   +
+  1  2    2    2
+
+2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17
++ +   +    +            +       +                +
+  1  2    2        4          2         4
+
+2, +0 +1 +2, +2 +4 +2 +4
+      2   3   5,   7 11 13 17
+
+*/
+
+function firstFactor1( n ) {
+   var e = sqrt(n);
+   for( var f=2; f<=e; f++ ) {
+       if ( n % f ) continue;
+       return f;
+   }
+   return 0;
+}
+
+function firstFactor2( n ) {
+   if ( n == 2 ) return 0;
+   if ( n % 2 == 0 ) return 2;
+   var e = sqrt(n);
+   for( var f=3; f<=e; f+=2 ) {
+       if ( n % f ) continue;
+       return f;
+   }
+   return 0;
+}
+
+function firstFactor24a( n ) {
+   if ( n == 2 ) return 0;
+   if ( n % 2 == 0 ) return 2;
+   if ( n == 3 ) return 0;
+   if ( n % 3 == 0 ) return 3;
+   var e = sqrt(n);
+   for( var f=5, i=2; f<=e; f+=i, i=6-i ) {
+       if ( n % f ) continue;
+       return f;
+   }
+   return 0;
+}
+
+function firstFactor24b( n ) {
+   var pv = [2, 3];
+   for (var i in pv) {
+      var f = pv[i];
+      if ( n == f ) return 0;
+      if ( n % f ) continue;
+      return f;
+   }
+   var e = sqrt(n);
+   for( var f=5, i=2; f<=e; f+=i, i=6-i ) {
+       if ( n % f ) continue;
+       return f;
+   }
+   return 0;
+}
+
+
+</script>
+</body>

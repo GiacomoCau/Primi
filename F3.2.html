@@ -1,0 +1,98 @@
+<body>
+<form>
+
+Scomposizione in fattori primi per
+<br>
+i numeri 
+da <input type=text name=f size=5>
+ a <input type=text name=t size=5>
+<br><br>
+<input type=checkbox name=s>
+Stampa risultato 
+<br><br>
+<input type=submit value=esegui>
+<br><br>
+</form>
+<script src="Util.js"></script>
+<script>
+
+/* qui i primi sono mantenuti come
+proprietà di un oggetto
+*/
+
+checkFormFromToAndExecute( main );
+
+function main(f, t, s) {
+   var tm = new Timer
+   var ps = {}
+   var cs = new Array( t + 1 )
+   for( var n=2; n<=t; n++ ) {
+      if ( cs[n] ) {
+         if ( n >= f ) factors3(n, ps, cs)
+      }
+      else {
+         ps[n] = true
+         setMultiples(n, t, cs)
+      }
+   }
+   tm.total()
+   if (s) writeTable( f, t, cs )
+}
+
+function factors1(n, ps, cs) {
+   // Fattori decrescenti
+   for ( var p in ps ) {
+      if ( n % p == 0 ) break
+	}
+   var ts = cs[n] = {}
+   if ( ps[n /= p] )
+      ts[n] = 1
+   else {
+		var fs = cs[n]
+      if( fs === true ) fs = factors1(n, ps, cs)
+      cpyObj(ts, fs)
+   }
+   incExp(ts, p)
+	return ts
+}
+
+function factors2(n, ps, cs) {
+   // una piccola ottimizzazione
+   // si evita la valutazione di ==0.
+   // Fattori decrescenti.
+   for ( var p in ps ) {
+      if ( n % p ) continue
+      break
+   }
+   var ts = cs[n] = {}
+   if ( ps[n /= p] )
+      ts[n] = 1;
+   else {
+		var fs = cs[n]
+      if( fs === true ) fs = factors2(n, ps, cs)
+      cpyObj(ts, fs)
+   }
+   incExp(ts, p); 
+	return ts
+}
+
+function factors3(n, ps, cs) {
+   // Fattori crescenti.
+   for ( var p in ps ) {
+      if ( n % p ) continue
+      break
+   }
+   var ts = cs[n] = {}
+   ts[p] = 1
+   if ( ps[n /= p] )
+      incExp(ts, n)
+   else {
+		var fs = cs[n]
+      if( fs === true ) fs = factors3(n, ps, cs)
+      cpyFactors(ts, fs, p)
+   }
+	return ts
+}
+
+</script>
+</body>

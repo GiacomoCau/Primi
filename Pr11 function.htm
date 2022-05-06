@@ -1,0 +1,68 @@
+<body>
+<script src="Util.js"></script>
+<script>
+
+var x = 1;
+
+function a() {
+    var x = 2;
+    return function () {
+        document.write("x=",x, "<br>");
+    }
+}
+
+a()();
+
+function b(f) {
+   var x=3;
+   f();
+}
+
+b(a());
+
+function c(a) {
+   var f=2;
+   function g() {
+      return 3;
+   }
+   return function (b) {
+      return a*b*f*g();
+   }
+}
+
+
+var z = c(3);
+document.write("z:",z(4),"<br>");
+document.write("z:",(c(3))(4),"<br>");
+
+for(k in z)
+    document.write(k +" : "+z[k],"<br>")
+
+document.write("cost: ",z.constructor.call(z,4),"<br>");
+document.write("b: ",b,"<br>");
+function sdddsd(){};
+document.write("b: ",nome(sdddsd),"<br>");
+
+document.write("ok")
+
+function nomex(f) {
+   f = f.toString();
+   return f.substring(9,f.indexOf("(")); 
+}
+
+prova ([b,sdddsd]);
+   function prova(v) {
+      document.write(v.length,"<br>");
+      for (var i=0; i<v.length; i++) {
+         document.write(nomex(v[i]), " --- " , v[i],"<br>");
+      }
+      function nome(f) {
+         var s = f.toString();
+         return s.substring(9,s.indexOf("(")); 
+      }
+   }
+
+
+</script>
+
+</body>

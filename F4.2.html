@@ -1,0 +1,133 @@
+<body>
+<form>
+
+Scomposizione in fattori primi per
+<br>
+i numeri 
+da <input type=text name=f size=5>
+ a <input type=text name=t size=5>
+<br><br>
+<input type=checkbox name=s>
+Stampa risultato 
+<br><br>
+<input type=submit value=esegui>
+<br><br>
+</form>
+<script src="Util.js"></script>
+<script>
+
+/*
+si sperimentano i miglioramenti 
+ottenibili con gli incrementi a ruota.
+main1 esegue il controllo sempre
+main2 per i numeri non divisibili per 2 
+main3 per i numeri non divisibili per 2 e 3.
+main4 per i numeri non divisibili per 2 e 3, incrementi su di un vettore, 1° modo di increment.
+main5 per i numeri non divisibili per 2 e 3, incrementi su di un vettore, 2° modo di increment.
+*/
+
+checkFormFromToAndExecute( main5 );
+
+function main1(f, t, s) {
+   var tm = new Timer
+
+   var ps = {}
+   for (var n=2; n<=t; n++) {
+		//test di primalità su tutti
+      if (isPrime(n, ps)) ps[n] = true
+   }
+   tm.parzial('Primi')
+
+   var cs = fattorize(f, t, ps)
+   tm.parzial('Fattori')
+
+   tm.total('Totale')
+   if (s) writeTable(f, t, cs)
+}
+
+function main2(f, t, s) {
+   var tm = new Timer
+
+   var ps = {2:true}
+   for (var n=3; n<=t; n+=2) {
+		//test di primalità solo sui dispari: 3 (4) 5 (4) 7 ... (i multipli di 2 sono composti)
+      if (isPrime(n, ps)) ps[n] = true
+   }
+   tm.parzial('Primi')
+
+   var cs = fattorize(f, t, ps)
+   tm.parzial('Fattori')
+
+   tm.total('Totale')
+   if (s) writeTable(f, t, cs)
+}
+
+function main3(f, t, s) {
+   var tm = new Timer
+
+   var ps = {2:true, 3:true}
+	for (var n=5, i=2; n<=t; n+=i, i=6-i) {
+		//test di primalità solo sui dispari non multipli di 3:  5 7 (9) 11 13 (15) 17 ...
+      if (isPrime(n, ps)) ps[n] = true
+   }
+   tm.parzial('Primi')
+
+   var cs = fattorize(f, t, ps)
+   tm.parzial('Fattori')
+
+   tm.total('Totale')
+   if (s) writeTable(f, t, cs)
+}
+
+// incrementi sono contenuti su di un vettore
+// due i possibili modi di incremento 
+//		i  = i == is.length-1 ?  0 : i+1
+//		i += i == is.length-1 ? -i : 1 
+
+function main4(f, t, s) {
+   var tm = new Timer
+
+   var ps = {2:true, 3:true}
+	for (var is=[4,2], e=is.length-1, i=0, n=1+is[i]; n<=t; n+=is[i+=i==e?-i:1]) {
+		//alert("main4"+{n:n})
+		//test di primalità solo sui dispari non multipli di 3:  5 7 (9) 11 13 (15) 17 ...
+		if (isPrime(n, ps)) ps[n]=true
+   }
+   tm.parzial('Primi')
+
+   var cs = fattorize(f, t, ps)
+   tm.parzial('Fattori')
+
+   tm.total('Totale')
+   if (s) writeTable(f, t, cs)
+}
+
+function main5(f, t, s) {
+   var tm = new Timer
+	//due alternative per l'incremento
+   var ps = {2:true, 3:true}
+	for (var is=[4,2], e=is.length-1, i=0, n=1+is[i]; n<=t; n+=is[i=i==e?0:i+1]) {
+		//alert('main4'+{n:n})
+		//test di primalità solo sui dispari non multipli di 3:  5 7 (9) 11 13 (15) 17 ...
+		if (isPrime(n, ps)) ps[n]=true
+   }
+   tm.parzial('Primi')
+
+   var cs = fattorize(f, t, ps)
+   tm.parzial('Fattori')
+
+   tm.total('Totale')
+   if (s) writeTable(f, t, cs)
+}
+
+
+function fattorize(f, t, ps) {
+   var cs = {}
+   for (var n=f ; n<=t; n++)  {
+      if (isComposite(n, ps)) factors(n, ps, cs)
+   }
+	return cs
+}
+
+</script>
+</body>

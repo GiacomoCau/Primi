@@ -1,0 +1,90 @@
+<body>
+<form>
+
+Identificazione dei numeri composti
+<br>
+da 2 sino a
+<input type=text name=t size=5>
+<br>
+<input type=checkbox name=s>
+Stampa risultato 
+<br><br>
+<input type=submit value=esegui>
+<br><br>
+
+</form>
+<script src="Util.js"></script>
+<script>
+
+checkFormToAndExecute( main );
+
+function main(t, s) {
+   var tm = new Timer();
+   var ps = primes(t);
+   tm.total();
+   writeStat( 2, t, ps );
+   if (s) writeTable( 2, t, ps );   
+}
+
+function primes( t ) {
+   // implementazione standard del 
+   // crivello di Eratostene
+   // t: high bound int
+   // return a array of length t+1
+   // 	true for prime
+   // 	false for composities
+   // il vettore conterrà un elemento per ogni numero
+   var ps = []
+	setMultiples(1, t, ps, true)
+   for ( var n=2, e=sqrt(t); n<=e; n++ ) {
+      if ( ps[n] ) {
+			setMultiples(n, t, ps, false)
+      }
+   }
+   return ps
+}
+
+//di n definizione con lo stesso nome è attiva l'ultima
+function setMultiples(n, t, ps, v) {
+   for ( var i=n+n; i<=t; i+=n ) ps[i] = v
+}
+
+function setMultiples(n, t, ps, v ) {
+   for ( var i=n; i<=t; ) ps[i+=n] = v;
+}
+
+function setMultiples( n, t, ps, v ) {
+   t -= n
+   for ( var i=n; i<=t; ) ps[i+=n] = v;
+}
+
+/* da provare
+function setMultiples( n, t, ps, v ) {
+   for ( var i=n;  i<t; ) ps[i+=n] = v;
+}
+
+function setMultiples( n, t, ps, v ) {
+   var i = n
+   while ( i<t ) ps[i+=n] = v;
+}
+*/
+
+
+function writeStat( n, t, ps ) {
+	var c=0
+   while ( n<=t ) {
+      if ( ps[n++] ) c+=1;
+   }
+   writenl('Trovati ', c, ' numeri primi')
+}
+
+function writeTable( n, t, ps ) {
+	writenl()
+   for( ; n<=t; n++ ) {
+      writenl( n,  ps[n] ? '' : ' = composto' )
+   }
+}
+
+
+</script>
+</body>
